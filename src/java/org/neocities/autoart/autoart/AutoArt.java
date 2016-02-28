@@ -1,5 +1,8 @@
 package org.neocities.autoart.autoart;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Environment;
@@ -280,7 +283,7 @@ public class AutoArt extends AppCompatActivity
         int[][] r = matrix_mod256(evalFunction(randFunction(), width, height));
         int[][] g = matrix_mod256(evalFunction(randFunction(), width, height));
         int[][] b = matrix_mod256(evalFunction(randFunction(), width, height));
-        Bitmap img = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        final Bitmap img = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         int al, gr, bl, rd;
         for (int i = 0; i < width; i++)
         {
@@ -297,19 +300,40 @@ public class AutoArt extends AppCompatActivity
         }
         ImageView imgv = (ImageView) findViewById(R.id.image_view);
         imgv.setImageBitmap(img);
-        File root = Environment.getExternalStorageDirectory();
-        File imgFile = new File(root.getAbsolutePath() + "/DCIM/Camera/" + Math.random() + ".png");
-        try
+        imgv.setOnClickListener(new View.OnClickListener()
         {
-            imgFile.createNewFile();
-            FileOutputStream ostream = new FileOutputStream(imgFile);
-            img.compress(Bitmap.CompressFormat.PNG, 100, ostream);
-            ostream.close();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+           public void onClick(View v)
+           {
+               File root = Environment.getExternalStorageDirectory();
+               String filename = ""+Math.random();
+               filename = filename.substring(2);
+               File imgFile = new File(root.getAbsolutePath() + "/DCIM/Camera/" + filename  + ".png");
+               try
+               {
+                   imgFile.createNewFile();
+                   FileOutputStream ostream = new FileOutputStream(imgFile);
+                   img.compress(Bitmap.CompressFormat.PNG, 100, ostream);
+                   ostream.close();
+               }
+               catch(Exception e)
+               {
+                   e.printStackTrace();
+               }
+               AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AutoArt.this);
+               alertDialogBuilder.setMessage("The image has been downloaded");
+               alertDialogBuilder.setPositiveButton("Ok",
+               new DialogInterface.OnClickListener() {
+
+                   @Override
+                   public void onClick(DialogInterface arg0, int arg1) {
+                   }
+               });
+
+               AlertDialog alertDialog = alertDialogBuilder.create();
+               alertDialog.show();
+           }
+        });
+
 
     }
 

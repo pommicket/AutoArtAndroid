@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,89 +20,98 @@ import java.util.Stack;
 
 public class AutoArt extends AppCompatActivity
 {
-    final int FUNCTION_LENGTH = 40;
+    final int FUNCTION_LENGTH = 20;
     int[][] matrix_add(int[][] a, int[][] b)
     {
+        int[][] c = new int[a.length][a[0].length];
         for (int i = 0; i < a.length; i++)
         {
             for (int j = 0; j < a[i].length; j++)
-                a[i][j] += b[i][j];
+                c[i][j] = a[i][j] + b[i][j];
         }
-        return a;
+        return c;
     }
 
     int[][] matrix_sub(int[][] a, int[][] b)
     {
+        int[][] c = new int[a.length][a[0].length];
         for (int i = 0; i < a.length; i++)
         {
             for (int j = 0; j < a[i].length; j++)
-                a[i][j] -= b[i][j];
+                c[i][j] = a[i][j] - b[i][j];
         }
-        return a;
+        return c;
     }
 
     int[][] matrix_mul(int[][] a, int[][] b)
     {
+        int[][] c = new int[a.length][a[0].length];
         for (int i = 0; i < a.length; i++)
         {
             for (int j = 0; j < a[i].length; j++)
-                a[i][j] *= b[i][j];
+                c[i][j] = a[i][j] * b[i][j];
         }
-        return a;
+        return c;
     }
 
     int[][] matrix_add_constant(int[][] m, int c)
     {
+        int[][] cpy = new int[m.length][m[0].length];
         for (int i = 0; i < m.length; i++)
         {
             for (int j = 0; j < m[i].length; j++)
-                m[i][j] += c;
+                cpy[i][j] = m[i][j] + c;
         }
-        return m;
+        return cpy;
     }
 
     int[][] matrix_scale(int[][] m, int c)
     {
+        int[][] cpy = new int[m.length][m[0].length];
         for (int i = 0; i < m.length; i++)
         {
             for (int j = 0; j < m[i].length; j++)
-                m[i][j] *= c;
+                cpy[i][j] = m[i][j] * c;
         }
-        return m;
+        return cpy;
     }
 
     int[][] sin_matrix(int[][] m)
     {
+        int[][] cpy = new int[m.length][m[0].length];
         for (int i = 0; i < m.length; i++)
             for (int j = 0; j < m[i].length; j++)
-                m[i][j] = (int)(255*Math.sin((double)m[i][j]));
-        return m;
+                cpy[i][j] = (int)(255*Math.sin((double)m[i][j]));
+        return cpy;
     }
 
     int[][] cos_matrix(int[][] m)
     {
+        int[][] cpy = new int[m.length][m[0].length];
         for (int i = 0; i < m.length; i++)
             for (int j = 0; j < m[i].length; j++)
-                m[i][j] = (int)(255*Math.cos((double) m[i][j]));
-        return m;
+                cpy[i][j] = (int)(255*Math.cos((double) m[i][j]));
+        return cpy;
     }
 
     int[][] sqrt_matrix(int[][] m)
     {
+        int[][] cpy = new int[m.length][m[0].length];
         for (int i = 0; i < m.length; i++)
             for (int j = 0; j < m[i].length; j++)
-                m[i][j] = (int)(255*Math.sqrt(Math.abs((double) m[i][j])));
-        return m;
+                cpy[i][j] = (int)(255*Math.sqrt(Math.abs((double) m[i][j])));
+        return cpy;
     }
 
     int[][] matrix_mod256(int[][] m)
     {
+        int[][] cpy = new int[m.length][m[0].length];
         for (int i = 0; i < m.length; i++)
         {
             for (int j = 0; j < m[i].length; j++)
-                m[i][j] %= 256;
+                cpy[i][j] = m[i][j] % 256;
         }
-        return m;
+        return cpy;
     }
 
     int randrange(int start, int end)
@@ -142,7 +152,7 @@ public class AutoArt extends AppCompatActivity
                         numbersOnStack++;
                         break;
                     case 2:
-                        function += randrange(0, 200) + " ";
+                        function += String.valueOf(randrange(0, 200)) + " ";
                         numbersOnStack++;
                         break;
                     case 3:
@@ -214,19 +224,19 @@ public class AutoArt extends AppCompatActivity
                 continue;
 
             if (token.equals("x"))
-                stack.push(x);
+                stack.push(x.clone());
             else if (token.equals("y"))
-                stack.push(y);
+                stack.push(y.clone());
             else if (token.equals("sin"))
-                stack.push(sin_matrix(stack.pop()));
+                stack.push(sin_matrix(stack.pop().clone()));
             else if (token.equals("cos"))
-                stack.push(cos_matrix(stack.pop()));
+                stack.push(cos_matrix(stack.pop().clone()));
             else if (token.equals("sqrt"))
-                stack.push(sqrt_matrix(stack.pop()));
+                stack.push(sqrt_matrix(stack.pop().clone()));
             else if (token.equals("+"))
             {
-                int[][] a = stack.pop();
-                int[][] b = stack.pop();
+                int[][] a = stack.pop().clone();
+                int[][] b = stack.pop().clone();
                 if (a.length == 1 && a[0].length == 1 && !(b.length == 1 && b[0].length == 1))
                     stack.push(matrix_add_constant(b, a[0][0]));
                 else if (!(a.length == 1 && a[0].length == 1) && b.length == 1 && b[0].length == 1)
@@ -237,8 +247,8 @@ public class AutoArt extends AppCompatActivity
             }
             else if (token.equals("-"))
             {
-                int[][] a = stack.pop();
-                int[][] b = stack.pop();
+                int[][] a = stack.pop().clone();
+                int[][] b = stack.pop().clone();
                 if (a.length == 1 && a[0].length == 1 && !(b.length == 1 && b[0].length == 1))
                     stack.push(matrix_add_constant(b, -a[0][0]));
 
@@ -250,8 +260,8 @@ public class AutoArt extends AppCompatActivity
             }
             else if (token.equals("*"))
             {
-                int[][] a = stack.pop();
-                int[][] b = stack.pop();
+                int[][] a = stack.pop().clone();
+                int[][] b = stack.pop().clone();
                 if (a.length == 1 && a[0].length == 1 && !(b.length == 1 && b[0].length == 1))
                     stack.push(matrix_scale(b, a[0][0]));
 
@@ -270,7 +280,6 @@ public class AutoArt extends AppCompatActivity
             }
 
         }
-
         return stack.pop();
     }
 
@@ -283,17 +292,16 @@ public class AutoArt extends AppCompatActivity
         int[][] r = matrix_mod256(evalFunction(randFunction(), width, height));
         int[][] g = matrix_mod256(evalFunction(randFunction(), width, height));
         int[][] b = matrix_mod256(evalFunction(randFunction(), width, height));
-        final Bitmap img = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        int al, gr, bl, rd;
+        final Bitmap img = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        int gr, bl, rd;
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                al = 255;
                 rd = r[i][j];
                 gr = g[i][j];
                 bl = b[i][j];
-                img.setPixel(i, j, Color.argb(al, rd, gr, bl));
+                img.setPixel(i, j, Color.rgb(rd, gr, bl));
 
             }
 

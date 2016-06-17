@@ -21,9 +21,9 @@ import java.util.Stack;
 public class AutoArt extends AppCompatActivity
 {
     final int FUNCTION_LENGTH = 20;
-    int[][] matrix_add(int[][] a, int[][] b)
+    double[][] matrix_add(double[][] a, double[][] b)
     {
-        int[][] c = new int[a.length][a[0].length];
+        double[][] c = new double[a.length][a[0].length];
         for (int i = 0; i < a.length; i++)
         {
             for (int j = 0; j < a[i].length; j++)
@@ -32,9 +32,9 @@ public class AutoArt extends AppCompatActivity
         return c;
     }
 
-    int[][] matrix_sub(int[][] a, int[][] b)
+    double[][] matrix_sub(double[][] a, double[][] b)
     {
-        int[][] c = new int[a.length][a[0].length];
+        double[][] c = new double[a.length][a[0].length];
         for (int i = 0; i < a.length; i++)
         {
             for (int j = 0; j < a[i].length; j++)
@@ -43,9 +43,9 @@ public class AutoArt extends AppCompatActivity
         return c;
     }
 
-    int[][] matrix_mul(int[][] a, int[][] b)
+    double[][] matrix_mul(double[][] a, double[][] b)
     {
-        int[][] c = new int[a.length][a[0].length];
+        double[][] c = new double[a.length][a[0].length];
         for (int i = 0; i < a.length; i++)
         {
             for (int j = 0; j < a[i].length; j++)
@@ -54,9 +54,9 @@ public class AutoArt extends AppCompatActivity
         return c;
     }
 
-    int[][] matrix_add_constant(int[][] m, int c)
+    double[][] matrix_add_constant(double[][] m, double c)
     {
-        int[][] cpy = new int[m.length][m[0].length];
+        double[][] cpy = new double[m.length][m[0].length];
         for (int i = 0; i < m.length; i++)
         {
             for (int j = 0; j < m[i].length; j++)
@@ -65,9 +65,9 @@ public class AutoArt extends AppCompatActivity
         return cpy;
     }
 
-    int[][] matrix_scale(int[][] m, int c)
+    double[][] matrix_scale(double[][] m, double c)
     {
-        int[][] cpy = new int[m.length][m[0].length];
+        double[][] cpy = new double[m.length][m[0].length];
         for (int i = 0; i < m.length; i++)
         {
             for (int j = 0; j < m[i].length; j++)
@@ -76,42 +76,81 @@ public class AutoArt extends AppCompatActivity
         return cpy;
     }
 
-    int[][] sin_matrix(int[][] m)
+    double[][] sin_matrix(double[][] m)
     {
-        int[][] cpy = new int[m.length][m[0].length];
+        double[][] cpy = new double[m.length][m[0].length];
         for (int i = 0; i < m.length; i++)
             for (int j = 0; j < m[i].length; j++)
                 cpy[i][j] = (int)(255*Math.sin((double)m[i][j]));
         return cpy;
     }
 
-    int[][] cos_matrix(int[][] m)
+    double[][] cos_matrix(double[][] m)
     {
-        int[][] cpy = new int[m.length][m[0].length];
+        double[][] cpy = new double[m.length][m[0].length];
         for (int i = 0; i < m.length; i++)
             for (int j = 0; j < m[i].length; j++)
                 cpy[i][j] = (int)(255*Math.cos((double) m[i][j]));
         return cpy;
     }
 
-    int[][] sqrt_matrix(int[][] m)
+    double[][] sqrt_matrix(double[][] m)
     {
-        int[][] cpy = new int[m.length][m[0].length];
+        double[][] cpy = new double[m.length][m[0].length];
         for (int i = 0; i < m.length; i++)
             for (int j = 0; j < m[i].length; j++)
                 cpy[i][j] = (int)(255*Math.sqrt(Math.abs((double) m[i][j])));
         return cpy;
     }
 
-    int[][] matrix_mod256(int[][] m)
+    double[][] matrix_mod256(double[][] m)
     {
-        int[][] cpy = new int[m.length][m[0].length];
+        double[][] cpy = new double[m.length][m[0].length];
         for (int i = 0; i < m.length; i++)
         {
             for (int j = 0; j < m[i].length; j++)
                 cpy[i][j] = m[i][j] % 256;
         }
         return cpy;
+    }
+
+    double[][] twod_array_clone(double[][] a)
+    {
+        double[][] cpy = new double[a.length][a[0].length];
+        for (int i = 0; i < a.length; i++)
+            cpy[i] = a[i].clone();
+        return cpy;
+    }
+
+    double[][] normalize(double[][] a)
+    {
+        double sum = 0;
+        for (int i = 0; i < a.length; i++)
+        {
+            for (int j = 0; j < a[i].length; j++)
+            {
+                sum += a[i][j];
+            }
+        }
+        double mean = sum / (a.length * a[0].length);
+        double sumSqDiff = 0;
+        for (int i = 0; i < a.length; i++)
+        {
+            for (int j = 0; j < a[i].length; j++)
+            {
+                sumSqDiff += (a[i][j]-mean)*(a[i][j]-mean);
+            }
+        }
+        double sigma = Math.sqrt(sumSqDiff/(a.length*a[0].length));
+        for (int i = 0; i < a.length; i++)
+        {
+            for (int j = 0; j < a[i].length; j++)
+            {
+                a[i][j] = 255*(a[i][j]-mean)/sigma;
+            }
+        }
+
+        return a;
     }
 
     int randrange(int start, int end)
@@ -201,11 +240,11 @@ public class AutoArt extends AppCompatActivity
 
     }
 
-    protected int[][] evalFunction(String function, int width, int height)
+    protected double[][] evalFunction(String function, int width, int height)
     {
-        Stack<int[][]> stack = new Stack<>();
-        int[][] x = new int[width][height];
-        int[][] y = new int[width][height];
+        Stack<double[][]> stack = new Stack<>();
+        double[][] x = new double[width][height];
+        double[][] y = new double[width][height];
 
         for (int i = 0; i < width; i++)
         {
@@ -224,19 +263,19 @@ public class AutoArt extends AppCompatActivity
                 continue;
 
             if (token.equals("x"))
-                stack.push(x.clone());
+                stack.push(twod_array_clone(x));
             else if (token.equals("y"))
-                stack.push(y.clone());
+                stack.push(twod_array_clone(y));
             else if (token.equals("sin"))
-                stack.push(sin_matrix(stack.pop().clone()));
+                stack.push(sin_matrix(twod_array_clone(stack.pop())));
             else if (token.equals("cos"))
-                stack.push(cos_matrix(stack.pop().clone()));
+                stack.push(cos_matrix(twod_array_clone(stack.pop())));
             else if (token.equals("sqrt"))
-                stack.push(sqrt_matrix(stack.pop().clone()));
+                stack.push(sqrt_matrix(twod_array_clone(stack.pop())));
             else if (token.equals("+"))
             {
-                int[][] a = stack.pop().clone();
-                int[][] b = stack.pop().clone();
+                double[][] a = (stack.pop());
+                double[][] b = (stack.pop());
                 if (a.length == 1 && a[0].length == 1 && !(b.length == 1 && b[0].length == 1))
                     stack.push(matrix_add_constant(b, a[0][0]));
                 else if (!(a.length == 1 && a[0].length == 1) && b.length == 1 && b[0].length == 1)
@@ -247,8 +286,8 @@ public class AutoArt extends AppCompatActivity
             }
             else if (token.equals("-"))
             {
-                int[][] a = stack.pop().clone();
-                int[][] b = stack.pop().clone();
+                double[][] a = (stack.pop());
+                double[][] b = (stack.pop());
                 if (a.length == 1 && a[0].length == 1 && !(b.length == 1 && b[0].length == 1))
                     stack.push(matrix_add_constant(b, -a[0][0]));
 
@@ -260,8 +299,8 @@ public class AutoArt extends AppCompatActivity
             }
             else if (token.equals("*"))
             {
-                int[][] a = stack.pop().clone();
-                int[][] b = stack.pop().clone();
+                double[][] a = (stack.pop());
+                double[][] b = (stack.pop());
                 if (a.length == 1 && a[0].length == 1 && !(b.length == 1 && b[0].length == 1))
                     stack.push(matrix_scale(b, a[0][0]));
 
@@ -274,7 +313,7 @@ public class AutoArt extends AppCompatActivity
             }
             else
             {
-                int[][] m = new int[1][1];
+                double[][] m = new double[1][1];
                 m[0][0] = Integer.parseInt(token);
                 stack.push(m);
             }
@@ -289,11 +328,11 @@ public class AutoArt extends AppCompatActivity
         EditText heightEdit = (EditText)findViewById(R.id.image_height_edit);
         int width = Integer.parseInt(widthEdit.getText().toString());
         int height = Integer.parseInt(heightEdit.getText().toString());
-        int[][] r = matrix_mod256(evalFunction(randFunction(), width, height));
-        int[][] g = matrix_mod256(evalFunction(randFunction(), width, height));
-        int[][] b = matrix_mod256(evalFunction(randFunction(), width, height));
-        final Bitmap img = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-        int gr, bl, rd;
+        double[][] r = matrix_mod256(normalize(evalFunction(randFunction(), width, height)));
+        double[][] g = matrix_mod256(normalize(evalFunction(randFunction(), width, height)));
+        double[][] b = matrix_mod256(normalize(evalFunction(randFunction(), width, height)));
+        final Bitmap img = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        double gr, bl, rd;
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
@@ -301,7 +340,7 @@ public class AutoArt extends AppCompatActivity
                 rd = r[i][j];
                 gr = g[i][j];
                 bl = b[i][j];
-                img.setPixel(i, j, Color.rgb(rd, gr, bl));
+                img.setPixel(i, j, Color.argb(255, (int)rd, (int)gr, (int)bl));
 
             }
 

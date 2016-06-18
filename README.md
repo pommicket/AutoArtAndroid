@@ -1,6 +1,8 @@
 # AutoArtAndroid
 The Android app for [AutoArt](http://github.com/pommicket/AutoArt).
 
+This is the source code. You can get the actual app [on the Play Store] (https://play.google.com/store/apps/details?id=org.neocities.autoart.autoart).
+
 On Android devices, make sure you are in non-mobile view (by tapping on desktop version) tap on AutoArt.apk, then tap on "Raw".  
 Make sure to set width and height, then wait for an image to appear. Tap on it to download it.
 

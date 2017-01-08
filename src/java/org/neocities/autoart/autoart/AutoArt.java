@@ -20,6 +20,34 @@ import java.util.Stack;
 
 public class AutoArt extends AppCompatActivity
 {
+
+    int sgn(double x)
+    {
+        if (x > 0)
+            return 1;
+        return -1;
+    }
+
+    double mod(double a, double b)
+    {
+        if (b <= 0)
+            throw new RuntimeException("Mod <=0! Mod < 0 not implemented yet!");
+
+        if (sgn(a) == sgn(b))
+        {
+            return a % b;
+        }
+        else
+        {
+            while (a < 0)
+            {
+                a += b;
+            }
+            return a;
+        }
+    }
+
+
     final int FUNCTION_LENGTH = 20;
     double[][] matrix_add(double[][] a, double[][] b)
     {
@@ -109,7 +137,7 @@ public class AutoArt extends AppCompatActivity
         for (int i = 0; i < m.length; i++)
         {
             for (int j = 0; j < m[i].length; j++)
-                cpy[i][j] = m[i][j] % 256;
+                cpy[i][j] = mod(m[i][j], 256);
         }
         return cpy;
     }
